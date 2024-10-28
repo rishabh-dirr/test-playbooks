@@ -18,6 +18,7 @@
              
 - name: MAIN PLAY - Actions with reachable hosts
   hosts: reachable_hosts
+  ignore_unreachable: true
   gather_facts: true
   tasks:
     - name: Ping reachable hosts
