@@ -1,7 +1,7 @@
 ---
 - name: Check host reachability
   gather_facts: false
-  hosts: "{{ target_hosts }}"
+  hosts: all
   tasks:
     - name: Check connection via explicite fact gathering
       ansible.builtin.setup:
