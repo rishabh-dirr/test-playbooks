@@ -1,37 +1,7 @@
-- name: Check host reachability
-  gather_facts: false
-  hosts: all
-  tasks:
-    - block:
-        - name: Check connection
-          ansible.builtin.wait_for_connection:
-            timeout: 10
-          ignore_unreachable: true
-          register: reachable_check
-        - name: Add to reachable hosts
-          ansible.builtin.group_by:
-            key: "reachable_hosts"
-      rescue:
-        - name: Add to unreachable hosts
-          ansible.builtin.group_by:
-            key: "unreachable_hosts"
-             
-- name: MAIN PLAY - Actions with reachable hosts
-  hosts: reachable_hosts
-  ignore_unreachable: true
-  gather_facts: true
-  tasks:
-    - name: Ping reachable hosts
-      ansible.builtin.ping:
+---
 
-- name: SUMMARY Play (optional)
-  hosts: localhost
+- hosts: all
+  ignore_unreachable: true
   gather_facts: false
   tasks:
-    - name: SUMMARY
-      ansible.builtin.debug:
-        msg: "Playbook executed on {{ groups['reachable_hosts'] | length }}/{{ q('ansible.builtin.inventory_hostnames', 'all') | length }} hosts that were reachable."
-    - name: Unreachable hosts with reason for unreachability
-      ansible.builtin.debug:
-        msg: "{{ hostvars[item]['reachable_check']['msg'] | default('Unreachable') }}"
-      with_items: "{{ groups['unreachable_hosts'] }}"
+    - ping:
