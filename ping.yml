@@ -28,4 +28,3 @@
         msg: "{{ hostvars[item]['reachable_check']['msg'] }}"
       with_items: "{{ groups['unreachable_hosts'] }}"
       
-- 
