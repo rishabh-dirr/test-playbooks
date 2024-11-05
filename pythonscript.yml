@@ -3,6 +3,7 @@
   become: true
   tasks:
     - name: Ensure Python is installed
+      become: true
       package:
         name: python3
         state: present
