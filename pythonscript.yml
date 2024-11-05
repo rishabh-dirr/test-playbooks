@@ -1,6 +1,11 @@
 - name: Install Python and Run Hello World Script
   hosts: all
   tasks:
+    - name: Copy Script to machine
+      copy:
+        src: /etc/scripts/hello_world.py
+        dest: /tmp/scripts/hello_world.py
+        
     - name: Run Hello World Python script
       command: /opt/conda/bin/python /tmp/scripts/hello_world.py
       register: script_output
