@@ -1,6 +1,6 @@
 - name: Install Python and Run Hello World Script
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Ensure Python is installed
       package:
