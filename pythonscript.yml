@@ -3,7 +3,7 @@
   tasks:
     - name: Copy Script to machine
       copy:
-        src: /home/nawgati/hello_world.py
+        src: /etc/scripts/hello_world.py
         dest: /tmp/scripts/hello_world.py
         
     - name: Run Hello World Python script
