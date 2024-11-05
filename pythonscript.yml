@@ -4,7 +4,7 @@
     - name: Copy Script to machine
       copy:
         src: /etc/scripts/hello_world.py
-        dest: /tmp/scripts/hello_world.py
+        dest: /tmp/hello_world.py
         
     - name: Run Hello World Python script
       command: /opt/conda/bin/python /tmp/scripts/hello_world.py
