@@ -2,7 +2,7 @@
   hosts: all
   tasks:
     - name: Run Hello World Python script
-      command: /opt/conda/bin/python /tmp/scripts/hello_world.py
+      command: /opt/conda/bin/python /etc/scripts/hello_world.py
       register: script_output
 
     - debug:
