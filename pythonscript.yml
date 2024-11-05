@@ -1,22 +1,8 @@
 - name: Install Python and Run Hello World Script
   hosts: all
-  become: true
   tasks:
-    - name: Ensure Python is installed
-      become: true
-      package:
-        name: python3
-        state: present
-
-    - name: Check Python installation
-      command: python3 --version
-      register: python_version
-
-    - debug:
-        var: python_version.stdout
-
     - name: Run Hello World Python script
-      command: python3 /tmp/scripts/hello_world.py
+      command: /opt/conda/bin/python /tmp/scripts/hello_world.py
       register: script_output
 
     - debug:
