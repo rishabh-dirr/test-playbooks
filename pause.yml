@@ -3,4 +3,4 @@
 - hosts: all
   gather_facts: false
   tasks:
-    - pause: seconds=1
+    - pause: minutes=2
