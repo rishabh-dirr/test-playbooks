@@ -32,14 +32,20 @@
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
 
-    - name: Add query result to global results
+    - name: Add query result to the hostvars
       set_fact:
-        all_results: "{{ all_results | default([]) + [query_result] }}"
+        my_query_result: "{{ query_result }}"
 
 - name: Aggregate Results from All Hosts
   hosts: localhost
   gather_facts: false
+
   tasks:
+    - name: Aggregate all query results
+      set_fact:
+        aggregated_results: "{{ groups['all'] | map('extract', hostvars, 'my_query_result') | list }}"
+
     - name: Print aggregated query results
       debug:
-        var: hostvars['all']['all_results']
+        var: aggregated_results
+
