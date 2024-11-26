@@ -15,4 +15,4 @@
 
     - name: Print the query result
       debug:
-        var: query_result.results
+        var: query_result
