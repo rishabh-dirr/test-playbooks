@@ -1,3 +1,22 @@
+# ---
+# - name: Execute MySQL Query
+#   hosts: all
+#   gather_facts: false
+
+#   tasks:
+#     - name: Execute MySQL query
+#       community.mysql.mysql_query:
+#         login_user: "{{ mysql_user }}"
+#         login_password: "{{ mysql_password }}"
+#         login_host: "{{ mysql_host }}"
+#         login_db: "{{ mysql_database }}"
+#         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
+#       register: query_result
+
+#     - name: Print the query result
+#       debug:
+#         var: query_result
+
 ---
 - name: Execute MySQL Query
   hosts: all
@@ -13,6 +32,14 @@
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
 
-    - name: Print the query result
+    - name: Add query result to global results
+      set_fact:
+        all_results: "{{ all_results | default([]) + [query_result] }}"
+
+- name: Aggregate Results from All Hosts
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Print aggregated query results
       debug:
-        var: query_result
+        var: hostvars['all']['all_results']
