@@ -26,6 +26,7 @@
     - name: Initialize results list
       set_fact:
         results_list: []
+      run_once: true  # Ensure this runs only once
 
     - name: Execute MySQL query
       community.mysql.mysql_query:
@@ -39,8 +40,14 @@
     - name: Append query result to results list
       set_fact:
         results_list: "{{ results_list + [query_result.query_result] }}"
+      run_once: true  # Ensure this runs only once
+
+    - name: Aggregate results from all hosts
+      set_fact:
+        aggregated_results: "{{ aggregated_results | default([]) + [query_result.query_result] }}"
+      run_once: true  # Ensure this runs only once
 
     - name: Print the aggregated query results
       debug:
-        var: results_list
-      # when: inventory_hostname == groups['all'][-1]  # Only print on the last host
+        var: aggregated_results
+      run_once: true  # Ensure this runs only once
