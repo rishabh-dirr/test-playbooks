@@ -18,7 +18,6 @@
 #         var: query_result.query_result
 
 ---
----
 - name: Execute MySQL Query
   hosts: all
   gather_facts: false
