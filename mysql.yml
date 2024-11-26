@@ -18,9 +18,13 @@
 #         var: query_result.query_result
 
 ---
+---
 - name: Execute MySQL Query
   hosts: all
   gather_facts: false
+
+  vars:
+    aggregated_results: []
 
   tasks:
     - name: Execute MySQL query
@@ -32,14 +36,10 @@
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
 
-    - name: Add query result to host facts
+    - name: Append query result to aggregated_results
       set_fact:
-        host_query_result: "{{ query_result.query_result }}"
-    
-    - name: Aggregate results from all hosts
-      set_fact:
-        aggregated_results: "{{ aggregated_results | default([]) + [host_query_result] }}"
+        aggregated_results: "{{ aggregated_results + [query_result.query_result] }}"
 
-    - name: Print the aggregated query results
+    - name: Print the aggregated query results (at the last host)
       debug:
         var: aggregated_results
