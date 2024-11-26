@@ -43,4 +43,4 @@
     - name: Print the aggregated query results
       debug:
         var: results_list
-      when: inventory_hostname == groups['all'][-1]  # Only print on the last host
+      # when: inventory_hostname == groups['all'][-1]  # Only print on the last host
