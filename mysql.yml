@@ -9,7 +9,7 @@
         login_user: "{{ mysql_user }}"
         login_password: "{{ mysql_password }}"
         login_host: "{{ mysql_host }}"
-        database: "{{ mysql_database }}"
+        login_db: "{{ mysql_database }}"
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
 
