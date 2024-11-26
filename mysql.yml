@@ -39,9 +39,7 @@
     - name: Aggregate results from all hosts
       set_fact:
         aggregated_results: "{{ aggregated_results | default([]) + [host_query_result] }}"
-      run_once: true
 
     - name: Print the aggregated query results
       debug:
         var: aggregated_results
-      run_once: true
