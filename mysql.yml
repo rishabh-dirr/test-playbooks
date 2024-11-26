@@ -1,9 +1,22 @@
 ---
 - name: Execute MySQL Query
   hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Install community.mysql collection (if not installed)
+      ansible.builtin.ansible_galaxy:
+        name: community.mysql
+        state: present
+
+    - name: Ensure required Python library (PyMySQL) is installed
+      ansible.builtin.pip:
+        name: pymysql
+        state: present
+
   tasks:
     - name: Execute MySQL query
-      mysql_query:
+      community.mysql.mysql_query:
         login_user: "{{ mysql_user }}"
         login_password: "{{ mysql_password }}"
         login_host: "{{ mysql_host }}"
