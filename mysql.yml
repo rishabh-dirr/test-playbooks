@@ -23,11 +23,6 @@
   gather_facts: false
 
   tasks:
-    - name: Initialize results list
-      set_fact:
-        results_list: []
-      run_once: true  # Ensure this runs only once
-
     - name: Execute MySQL query
       community.mysql.mysql_query:
         login_user: "{{ mysql_user }}"
@@ -37,17 +32,16 @@
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
 
-    - name: Append query result to results list
+    - name: Add query result to host facts
       set_fact:
-        results_list: "{{ results_list + [query_result.query_result] }}"
-      run_once: true  # Ensure this runs only once
-
+        host_query_result: "{{ query_result.query_result }}"
+    
     - name: Aggregate results from all hosts
       set_fact:
-        aggregated_results: "{{ aggregated_results | default([]) + [query_result.query_result] }}"
-      run_once: true  # Ensure this runs only once
+        aggregated_results: "{{ aggregated_results | default([]) + [host_query_result] }}"
+      run_once: true
 
     - name: Print the aggregated query results
       debug:
         var: aggregated_results
-      run_once: true  # Ensure this runs only once
+      run_once: true
