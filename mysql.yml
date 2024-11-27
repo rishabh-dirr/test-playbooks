@@ -30,7 +30,7 @@
           {{
             groups['all']
             | map('extract', hostvars, 'query_result_for_aggregation')
-            | select('defined')  # Ignore undefined results
+            | select('defined')
             | list
           }}
 
