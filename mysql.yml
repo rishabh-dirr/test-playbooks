@@ -16,7 +16,7 @@
 
     - name: Store query result in hostvars
       set_fact:
-        query_result_for_aggregation: "{{ query_result.query_result }}"
+        query_result_for_aggregation: "{{ query_result.query_result[0][0] }}"
       when: query_result is defined and query_result.query_result is defined
 
 - name: Aggregate Results on Localhost
