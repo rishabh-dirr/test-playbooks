@@ -37,13 +37,11 @@
 
     - name: Add query result to global aggregated results
       delegate_to: localhost
-      run_once: true
       set_fact:
         aggregated_results: "{{ aggregated_results + query_results_from_all_hosts }}"
 
     - name: Combine results from all hosts
       delegate_to: localhost
-      run_once: true
       set_fact:
         query_results_from_all_hosts: >-
           {{
@@ -51,7 +49,6 @@
           }}
 
     - name: Print aggregated results
-      run_once: true
       delegate_to: localhost
       debug:
         var: aggregated_results
