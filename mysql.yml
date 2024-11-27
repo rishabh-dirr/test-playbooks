@@ -42,5 +42,3 @@
     - name: Print the aggregated query results (at the last host)
       debug:
         var: aggregated_results
-      run_once: true
-      when: inventory_hostname == groups['all'][-1]
