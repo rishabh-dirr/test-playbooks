@@ -36,7 +36,6 @@
       register: query_result
 
     - name: Add query result to global aggregated results
-      run_once: true
       delegate_to: localhost
       vars:
         host_query_results: "{{ hostvars | map(attribute='query_result.query_result') | list }}"
@@ -44,7 +43,6 @@
         aggregated_results: "{{ aggregated_results + host_query_results }}"
 
     - name: Print aggregated results
-      run_once: true
       delegate_to: localhost
       debug:
         var: aggregated_results
