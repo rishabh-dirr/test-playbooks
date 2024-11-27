@@ -37,12 +37,21 @@
 
     - name: Add query result to global aggregated results
       delegate_to: localhost
-      vars:
-        host_query_results: "{{ hostvars | map(attribute='query_result.query_result') | list }}"
+      run_once: true
       set_fact:
-        aggregated_results: "{{ aggregated_results + host_query_results }}"
+        aggregated_results: "{{ aggregated_results + query_results_from_all_hosts }}"
+
+    - name: Combine results from all hosts
+      delegate_to: localhost
+      run_once: true
+      set_fact:
+        query_results_from_all_hosts: >-
+          {{
+            groups['all'] | map('extract', hostvars, 'query_result') | map(attribute='query_result') | list
+          }}
 
     - name: Print aggregated results
+      run_once: true
       delegate_to: localhost
       debug:
         var: aggregated_results
