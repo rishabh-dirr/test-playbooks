@@ -22,6 +22,9 @@
   hosts: all
   gather_facts: false
 
+  vars:
+    aggregated_results: []
+
   tasks:
     - name: Execute MySQL query
       community.mysql.mysql_query:
@@ -32,19 +35,17 @@
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
 
-    - name: Add query result to group results
-      add_host:
-        name: aggregated_results_group
-        query_result: "{{ query_result.query_result }}"
-
-- name: Aggregate and print results
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Aggregate results from all hosts
+    - name: Add query result to global aggregated results
+      run_once: true
+      delegate_to: localhost
+      vars:
+        host_query_results: "{{ hostvars | map(attribute='query_result.query_result') | list }}"
       set_fact:
-        all_results: "{{ hostvars | dict2items | selectattr('key', 'search', 'aggregated_results_group') | map(attribute='value.query_result') | list }}"
+        aggregated_results: "{{ aggregated_results + host_query_results }}"
 
     - name: Print aggregated results
+      run_once: true
+      delegate_to: localhost
       debug:
-        var: all_results
+        var: aggregated_results
+
