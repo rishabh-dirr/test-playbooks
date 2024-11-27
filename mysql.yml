@@ -1,5 +1,5 @@
 ---
-- name: Execute MySQL Query
+- name: Execute MySQL Query on All Hosts
   hosts: all
   gather_facts: false
 
@@ -12,24 +12,28 @@
         login_db: "{{ mysql_database }}"
         query: "SELECT s.oid as station, c.name as number, c.ip, c.url FROM stations s INNER JOIN channels c ON s.id = c.station;"
       register: query_result
+      ignore_errors: yes
 
-- name: Aggregate and Print Results
+    - name: Store query result in hostvars
+      set_fact:
+        query_result_for_aggregation: "{{ query_result.query_result }}"
+      when: query_result is defined and query_result.query_result is defined
+
+- name: Aggregate Results on Localhost
   hosts: localhost
   gather_facts: false
 
   tasks:
-    - name: Combine results from all hosts
+    - name: Combine results from reachable hosts
       set_fact:
-        query_results_from_all_hosts: >-
+        aggregated_results: >-
           {{
-            groups['all'] | map('extract', hostvars, 'query_result') | select('defined') | map(attribute='query_result') | list
+            groups['all']
+            | map('extract', hostvars, 'query_result_for_aggregation')
+            | select('defined')  # Ignore undefined results
+            | list
           }}
-
-    - name: Add query result to global aggregated results
-      set_fact:
-        aggregated_results: "{{ query_results_from_all_hosts }}"
 
     - name: Print aggregated results
       debug:
         var: aggregated_results
-
