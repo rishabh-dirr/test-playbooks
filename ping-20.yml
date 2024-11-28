@@ -2,5 +2,9 @@
 - name: Run a Python script
   hosts: localhost
   tasks:
+    - name: Wait for 5 minutes
+      pause:
+        minutes: 5
+
     - name: Execute script
       command: python3 /var/lib/awx/scripts/hello_world.py
